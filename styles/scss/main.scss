@@ -1,0 +1,74 @@
+@import "./resets";
+@import "./variables";
+
+// use function(must have return value)
+@function weights($weight-name) {
+    @return map-get($map: $font-weights, $key: $weight-name);
+}
+
+// use mixin(only for styles not have return value)
+@mixin flexCenter($direction) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) {
+    @if $light-theme {
+        background: lighten($color: $primary-color, $amount: 100%);
+        color: darken($color: $text-color, $amount: 100%);
+    }
+}
+@mixin mobile {
+    @media (max-width: $mobile) {
+        @content;
+    }
+}
+body {
+    background: $primary-color;
+    color: $text-color;
+}
+
+.main {
+    // width: calc(80% - 40%);
+    // in sass do not use calc
+    width: 80% - 40%;
+    margin: 0 auto;
+    @include flexCenter(row);
+    // .main-paragraph {
+    //     font-weight: map-get($font-weights, bold);
+    // }
+    // &__paragraph {
+    //     font-weight: map-get($font-weights, bold);
+    // }
+    // interpolation (taking all with before)
+    #{&}__paragraph1 {
+        // font-weight: map-get($font-weights, bold);
+        font-weight: weights(regular);
+        &::first-letter {
+            color: $accent-color;
+        }
+        &::first-line {
+            font-size: 50px;
+        }
+        &:hover {
+            color: $accent-color;
+        }
+    }
+
+    #{&}__paragraph2 {
+        @extend #{&}__paragraph1;
+        &:hover {
+            color: $primary-color;
+        }
+    }
+
+    @include mobile {
+        flex-direction: column;
+    }
+}
+
+.light {
+    @include theme($light-theme: true);
+}
